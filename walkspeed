@@ -1,13 +1,28 @@
--- Walkspeed.lua
-local core = require(path.to.Core)
-
-local LocalPlayer = core.LocalPlayer
-local getChar, getHum = core.getChar, core.getHum
+-- WALKSPEED (slider)
+local Services = require(script.Parent.Services)
+local UITools = require(script.Parent.UITools)
 
 local desiredWalk = 16
-makeSlider("Walkspeed (default 16)", 0, function(v, lbl)
-	desiredWalk = math.floor(16 + v*104) -- 16..120
-	lbl.Text = ("Walkspeed: %d"):format(desiredWalk)
-	local ch = getChar(LocalPlayer); local hum = getHum(ch)
-	if hum then hum.WalkSpeed = desiredWalk end
-end)
+
+local function initWalkSpeed()
+    local slider, setter = UITools.makeSlider("Walkspeed (default 16)", 0, function(v, lbl)
+        desiredWalk = math.floor(16 + v*104) -- 16..120
+        lbl.Text = ("Walkspeed: %d"):format(desiredWalk)
+        local ch = Services.getChar(Services.LocalPlayer); local hum = Services.getHum(ch)
+        if hum then hum.WalkSpeed = desiredWalk end
+    end)
+    
+    -- keep WalkSpeed setelah respawn
+    Services.LocalPlayer.CharacterAdded:Connect(function(ch)
+        task.wait(.2)
+        local hum = Services.getHum(ch)
+        if hum then hum.WalkSpeed = desiredWalk end
+    end)
+    
+    return slider
+end
+
+return {
+    init = initWalkSpeed,
+    desiredWalk = desiredWalk
+}
