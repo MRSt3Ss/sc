@@ -1,0 +1,12 @@
+-- Walkspeed Control
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local function getChar(plr) return plr.Character or plr.CharacterAdded:Wait() end
+local function getHum(char) return char:FindFirstChildOfClass("Humanoid") end
+
+-- Ubah nilai sesuai kebutuhan
+local desiredWalk = 50 -- default 50, range 16..120
+local char = getChar(LocalPlayer)
+local hum = getHum(char)
+if hum then hum.WalkSpeed = desiredWalk end
