@@ -1,14 +1,16 @@
--- Infinity Jump
-local UserInputService = game:GetService("UserInputService")
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
+-- InfinityJump.lua
+local core = require(path.to.Core)
+local LocalPlayer, UserInputService = core.LocalPlayer, core.UserInputService
+local getHum = core.getHum
 
-local conn
-if conn then conn:Disconnect() end
-conn = UserInputService.JumpRequest:Connect(function()
-    local char = LocalPlayer.Character
-    local hum = char and char:FindFirstChildOfClass("Humanoid")
-    if hum then
-        hum:ChangeState(Enum.HumanoidStateType.Jumping)
-    end
+local infJumpConn
+makeToggle("Infinity Jump", function(state)
+	if infJumpConn then infJumpConn:Disconnect(); infJumpConn=nil end
+	if state then
+		infJumpConn = UserInputService.JumpRequest:Connect(function()
+			local ch = LocalPlayer.Character
+			local hum = ch and getHum(ch)
+			if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+		end)
+	end
 end)
