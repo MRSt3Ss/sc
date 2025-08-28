@@ -1,12 +1,13 @@
--- Walkspeed Control
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
+-- Walkspeed.lua
+local core = require(path.to.Core)
 
-local function getChar(plr) return plr.Character or plr.CharacterAdded:Wait() end
-local function getHum(char) return char:FindFirstChildOfClass("Humanoid") end
+local LocalPlayer = core.LocalPlayer
+local getChar, getHum = core.getChar, core.getHum
 
--- Ubah nilai sesuai kebutuhan
-local desiredWalk = 50 -- default 50, range 16..120
-local char = getChar(LocalPlayer)
-local hum = getHum(char)
-if hum then hum.WalkSpeed = desiredWalk end
+local desiredWalk = 16
+makeSlider("Walkspeed (default 16)", 0, function(v, lbl)
+	desiredWalk = math.floor(16 + v*104) -- 16..120
+	lbl.Text = ("Walkspeed: %d"):format(desiredWalk)
+	local ch = getChar(LocalPlayer); local hum = getHum(ch)
+	if hum then hum.WalkSpeed = desiredWalk end
+end)
